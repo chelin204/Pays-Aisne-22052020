@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <style>
+        #map {
+            width: 1081px;
+            height: 840px;
+        }
+        </style>
+        <title>Communes du département de l'Aisne</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/proj4.js"></script>
+        <script src="js/proj4leaflet.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/Pays_0.js"></script>
+        <script src="data/EPCI_1.js"></script>
+        <script src="data/Communes_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var crs = new L.Proj.CRS('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', {
+            resolutions: [2800, 1400, 700, 350, 175, 84, 42, 21, 11.2, 5.6, 2.8, 1.4, 0.7, 0.35, 0.14, 0.07],
+        });
+        var map = L.map('map', {
+            crs: crs,
+            continuousWorld: false,
+            worldCopyJump: false, 
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        function pop_Pays_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['INTERCOM'] !== null ? Autolinker.link(String(feature.properties['INTERCOM'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Pays'] !== null ? Autolinker.link(String(feature.properties['Pays'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Pays_0_0() {
+            return {
+                pane: 'pane_Pays_0',
+                opacity: 1,
+                color: 'rgba(59,83,248,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_Pays_0');
+        map.getPane('pane_Pays_0').style.zIndex = 400;
+        map.getPane('pane_Pays_0').style['mix-blend-mode'] = 'normal';
+        var layer_Pays_0 = new L.geoJson(json_Pays_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Pays_0',
+            onEachFeature: pop_Pays_0,
+            style: style_Pays_0_0,
+        });
+        bounds_group.addLayer(layer_Pays_0);
+        map.addLayer(layer_Pays_0);
+        function pop_EPCI_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['INTERCOM'] !== null ? Autolinker.link(String(feature.properties['INTERCOM'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_EPCI_1_0(feature) {
+            switch(String(feature.properties['INTERCOM'])) {
+                case 'CA de Chauny-Tergnier-La Fere':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(229,255,5,0.24)',
+            }
+                    break;
+                case 'CA de la Région de Chateau-Thierry':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,75,232,0.167529411765)',
+            }
+                    break;
+                case 'CA du Canton de Charly':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(223,182,231,0.165647058824)',
+            }
+                    break;
+                case 'CA du Pays de Laon':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(42,61,181,0.24)',
+            }
+                    break;
+                case 'CA du Saint Quentinois':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(66,99,1,0.24)',
+            }
+                    break;
+                case 'CA du Soissonnais':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,146,35,0.24)',
+            }
+                    break;
+                case 'CC de la  Thierache du Centre':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(232,0,1,0.24)',
+            }
+                    break;
+                case 'CC de la Champagne Picarde':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,148,248,0.166588235294)',
+            }
+                    break;
+                case 'CC de Retz en Valois':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(96,0,19,0.239058823529)',
+            }
+                    break;
+                case 'CC des Portes de la Thierache':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(202,46,139,0.166588235294)',
+            }
+                    break;
+                case 'CC d\'Oulchy le Chateau':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,0,0,0.24)',
+            }
+                    break;
+                case 'CC du Chemin des Dames':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(152,233,222,0.238117647059)',
+            }
+                    break;
+                case 'CC du Pays de la Serre':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(58,231,242,0.24)',
+            }
+                    break;
+                case 'CC du Pays des 3 Rivieres':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,80,236,0.24)',
+            }
+                    break;
+                case 'CC du Pays du Vermandois':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(27,246,82,0.225882352941)',
+            }
+                    break;
+                case 'CC du Val de l\'Aisne':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(192,73,18,0.24)',
+            }
+                    break;
+                case 'CC du Val de l\'Oise':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,103,50,0.24)',
+            }
+                    break;
+                case 'CC Picardie des Chateaux':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,242,183,0.24)',
+            }
+                    break;
+                case 'CC Thierache Sambre et Oise':
+                    return {
+                pane: 'pane_EPCI_1',
+                opacity: 1,
+                color: 'rgba(0,0,255,0.24)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(192,20,52,0.168470588235)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_EPCI_1');
+        map.getPane('pane_EPCI_1').style.zIndex = 401;
+        map.getPane('pane_EPCI_1').style['mix-blend-mode'] = 'normal';
+        var layer_EPCI_1 = new L.geoJson(json_EPCI_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_EPCI_1',
+            onEachFeature: pop_EPCI_1,
+            style: style_EPCI_1_0,
+        });
+        bounds_group.addLayer(layer_EPCI_1);
+        map.addLayer(layer_EPCI_1);
+        function pop_Communes_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['COMMUNE'] !== null ? Autolinker.link(String(feature.properties['COMMUNE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">INSEE</th>\
+                        <td>' + (feature.properties['INSEE'] !== null ? Autolinker.link(String(feature.properties['INSEE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">POSTAL</th>\
+                        <td>' + (feature.properties['POSTAL'] !== null ? Autolinker.link(String(feature.properties['POSTAL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">POP_2017</th>\
+                        <td>' + (feature.properties['POP_2017'] !== null ? Autolinker.link(String(feature.properties['POP_2017'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>TERRITOIRE</strong><br />' + (feature.properties['TERRITOIRE'] !== null ? Autolinker.link(String(feature.properties['TERRITOIRE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['INTERCOM'] !== null ? Autolinker.link(String(feature.properties['INTERCOM'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PAYS'] !== null ? Autolinker.link(String(feature.properties['PAYS'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>CONTACTS</strong><br />' + (feature.properties['CONTACTS'] !== null ? Autolinker.link(String(feature.properties['CONTACTS'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TEL</th>\
+                        <td>' + (feature.properties['TEL'] !== null ? Autolinker.link(String(feature.properties['TEL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FAX</th>\
+                        <td>' + (feature.properties['FAX'] !== null ? Autolinker.link(String(feature.properties['FAX'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">EMAIL</th>\
+                        <td>' + (feature.properties['EMAIL'] !== null ? Autolinker.link(String(feature.properties['EMAIL'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Communes_2_0() {
+            return {
+                pane: 'pane_Communes_2',
+                opacity: 1,
+                color: 'rgba(78,78,78,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_Communes_2');
+        map.getPane('pane_Communes_2').style.zIndex = 402;
+        map.getPane('pane_Communes_2').style['mix-blend-mode'] = 'normal';
+        var layer_Communes_2 = new L.geoJson(json_Communes_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Communes_2',
+            onEachFeature: pop_Communes_2,
+            style: style_Communes_2_0,
+        });
+        bounds_group.addLayer(layer_Communes_2);
+        map.addLayer(layer_Communes_2);
+        var title = new L.Control();
+        title.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        title.update = function () {
+            this._div.innerHTML = '<h2>Communes du département de l\'Aisne</h2>';
+        };
+        title.addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_Communes_2,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'COMMUNE'}));
+        </script>
+    </body>
+</html>
